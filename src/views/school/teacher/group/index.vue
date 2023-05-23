@@ -1,11 +1,20 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
-      <el-form-item label="小组名称" prop="dictName">
+      <el-form-item label="字典名称" prop="dictName">
         <el-input
           v-model="queryParams.dictName"
           clearable
-          placeholder="请输入小组名称"
+          placeholder="请输入字典名称"
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="字典类型" prop="dictType">
+        <el-input
+          v-model="queryParams.dictType"
+          placeholder="请输入字典类型"
+          clearable
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
@@ -13,12 +22,12 @@
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
+          placeholder="字典状态"
           clearable
-          placeholder="提交状态"
           style="width: 240px"
         >
           <el-option
-            v-for="dict in dict.type.student_info_submit"
+            v-for="dict in dict.type.sys_normal_disable"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -29,10 +38,10 @@
         <el-date-picker
           v-model="dateRange"
           end-placeholder="结束日期"
-          range-separator="-"
-          start-placeholder="开始日期"
           style="width: 240px"
           type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
           value-format="yyyy-MM-dd"
         ></el-date-picker>
       </el-form-item>
@@ -46,11 +55,11 @@
       <el-col :span="1.5">
         <el-button
           v-hasPermi="['system:dict:add']"
-          icon="el-icon-plus"
           plain
+          icon="el-icon-plus"
           size="mini"
-          type="primary"
           @click="handleAdd"
+          type="primary"
         >新增
         </el-button>
       </el-col>
@@ -59,10 +68,10 @@
           v-hasPermi="['system:dict:edit']"
           :disabled="single"
           icon="el-icon-edit"
-          plain
           size="mini"
-          type="success"
+          plain
           @click="handleUpdate"
+          type="success"
         >修改
         </el-button>
       </el-col>
@@ -71,79 +80,76 @@
           v-hasPermi="['system:dict:remove']"
           :disabled="multiple"
           icon="el-icon-delete"
-          plain
           size="mini"
-          type="danger"
+          plain
           @click="handleDelete"
+          type="danger"
         >删除
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
           v-hasPermi="['system:dict:export']"
-          icon="el-icon-download"
           plain
+          icon="el-icon-download"
           size="mini"
-          type="warning"
           @click="handleExport"
+          type="warning"
         >导出
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
           v-hasPermi="['system:dict:remove']"
-          icon="el-icon-refresh"
           plain
+          icon="el-icon-refresh"
           size="mini"
-          type="danger"
           @click="handleRefreshCache"
+          type="danger"
         >刷新缓存
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column align="center" label="小组编号" prop="groupId"/>
-      <el-table-column :show-overflow-tooltip="true" align="center" label="小组名称">
+      <el-table-column align="center" label="字典编号" prop="dictId"/>
+      <el-table-column :show-overflow-tooltip="true" align="center" label="字典名称" prop="dictName"/>
+      <el-table-column :show-overflow-tooltip="true" align="center" label="字典类型">
         <template slot-scope="scope">
-          <router-link :to="'/system/dict-data/index/' + scope.row.groupId" class="link-type">
-            <span>{{ scope.row.groupName }}</span>
+          <router-link :to="'/student/dict-data/index/' + scope.row.dictId" class="link-type">
+            <span>{{ scope.row.dictType }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="提交状态" prop="status">
+      <el-table-column align="center" label="状态" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.student_info_submit" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" align="center" label="备注" prop="remark">
+      <el-table-column :show-overflow-tooltip="true" align="center" label="备注" prop="remark"/>
+      <el-table-column align="center" label="创建时间" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.remark ? scope.row.remark : '暂无' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="提交时间" prop="submitTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.submitTime ? scope.row.submitTime : '未提交' }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
-            v-hasPermi="['system:dict:edit']"
-            icon="el-icon-edit"
             size="mini"
             type="text"
+            v-hasPermi="['system:dict:edit']"
             @click="handleUpdate(scope.row)"
+            icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-            v-hasPermi="['system:dict:remove']"
-            icon="el-icon-delete"
             size="mini"
             type="text"
+            v-hasPermi="['system:dict:remove']"
             @click="handleDelete(scope.row)"
+            icon="el-icon-delete"
           >删除
           </el-button>
         </template>
@@ -152,9 +158,9 @@
 
     <pagination
       v-show="total>0"
-      :limit.sync="queryParams.pageSize"
       :page.sync="queryParams.pageNum"
       :total="total"
+      :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
@@ -170,7 +176,7 @@
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.student_info_submit"
+              v-for="dict in dict.type.sys_normal_disable"
               :key="dict.value"
               :label="dict.value"
             >{{ dict.label }}
@@ -190,11 +196,11 @@
 </template>
 
 <script>
-import { addType, delType, getType, listGroup, refreshCache, updateType } from '@/api/complex/student/group/type'
+import { addType, delType, getType, listType, refreshCache, updateType } from '@/api/system/dict/type'
 
 export default {
   name: 'Dict',
-  dicts: ['student_info_submit'],
+  dicts: ['sys_normal_disable'],
   data() {
     return {
       // 遮罩层
@@ -209,8 +215,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 小组表格数据
-      groupList: [],
+      // 字典表格数据
+      typeList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -236,7 +242,7 @@ export default {
           { required: true, message: '字典类型不能为空', trigger: 'blur' }
         ]
       }
-    }
+    };
   },
   created() {
     this.getList()
@@ -245,8 +251,8 @@ export default {
     /** 查询字典类型列表 */
     getList() {
       this.loading = true
-      listGroup(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.groupList = response.rows
+      listType(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.typeList = response.rows
           this.total = response.total
           this.loading = false
         }
@@ -346,5 +352,5 @@ export default {
       })
     }
   }
-}
+};
 </script>

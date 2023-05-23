@@ -14,8 +14,8 @@
       <el-form-item label="字典标签" prop="dictLabel">
         <el-input
           v-model="queryParams.dictLabel"
-          clearable
           placeholder="请输入字典标签"
+          clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -39,11 +39,11 @@
       <el-col :span="1.5">
         <el-button
           v-hasPermi="['system:dict:add']"
-          icon="el-icon-plus"
           plain
+          icon="el-icon-plus"
           size="mini"
-          type="primary"
           @click="handleAdd"
+          type="primary"
         >新增
         </el-button>
       </el-col>
@@ -52,10 +52,10 @@
           v-hasPermi="['system:dict:edit']"
           :disabled="single"
           icon="el-icon-edit"
-          plain
           size="mini"
-          type="success"
+          plain
           @click="handleUpdate"
+          type="success"
         >修改
         </el-button>
       </el-col>
@@ -64,21 +64,21 @@
           v-hasPermi="['system:dict:remove']"
           :disabled="multiple"
           icon="el-icon-delete"
-          plain
           size="mini"
-          type="danger"
+          plain
           @click="handleDelete"
+          type="danger"
         >删除
         </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
           v-hasPermi="['system:dict:export']"
-          icon="el-icon-download"
           plain
+          icon="el-icon-download"
           size="mini"
-          type="warning"
           @click="handleExport"
+          type="warning"
         >导出
         </el-button>
       </el-col>
@@ -86,8 +86,8 @@
         <el-button
           icon="el-icon-close"
           plain
-          size="mini"
           type="warning"
+          size="mini"
           @click="handleClose"
         >关闭
         </el-button>
@@ -121,19 +121,19 @@
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
-            v-hasPermi="['system:dict:edit']"
-            icon="el-icon-edit"
             size="mini"
             type="text"
+            v-hasPermi="['system:dict:edit']"
             @click="handleUpdate(scope.row)"
+            icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-            v-hasPermi="['system:dict:remove']"
-            icon="el-icon-delete"
             size="mini"
             type="text"
+            v-hasPermi="['system:dict:remove']"
             @click="handleDelete(scope.row)"
+            icon="el-icon-delete"
           >删除
           </el-button>
         </template>
@@ -142,9 +142,9 @@
 
     <pagination
       v-show="total>0"
-      :limit.sync="queryParams.pageSize"
       :page.sync="queryParams.pageNum"
       :total="total"
+      :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
@@ -200,7 +200,7 @@
 
 <script>
 import { addData, delData, getData, listData, updateData } from '@/api/system/dict/data'
-import { getType, optionselect as getDictOptionselect } from '@/api/complex/student/group/type'
+import { getType, optionselect as getDictOptionselect } from '@/api/system/dict/type'
 
 export default {
   name: 'Data',
@@ -354,7 +354,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.dictCode)
-      this.single = selection.length != 1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
@@ -371,7 +371,7 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.dictCode != undefined) {
+          if (this.form.dictCode !== undefined) {
             updateData(this.form).then(response => {
               this.$store.dispatch('dict/removeDict', this.queryParams.dictType)
               this.$modal.msgSuccess('修改成功')
