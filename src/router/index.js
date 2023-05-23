@@ -140,7 +140,7 @@ export const dynamicRoutes = [
     permissions: ['system:dict:list'],
     children: [
       {
-        path: 'index/:dictId(\\d+)',
+        path: 'index/:groupId(\\d+)',
         component: () => import('@/views/school/teacher/group/data.vue'),
         name: 'Data',
         meta: { title: '字典数据', activeMenu: '/student/group' }

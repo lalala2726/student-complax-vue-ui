@@ -10,9 +10,9 @@ export function listGroup(query) {
 }
 
 // 查询字典类型详细
-export function getType(dictId) {
+export function getGroupData(groupId) {
   return request({
-    url: '/system/dict/type/' + dictId,
+    url: '/complex/student/group/' + groupId,
     method: 'get'
   })
 }
