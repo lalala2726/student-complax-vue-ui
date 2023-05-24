@@ -143,7 +143,7 @@ export const dynamicRoutes = [
         path: 'index/:groupId(\\d+)',
         component: () => import('@/views/school/teacher/group/data.vue'),
         name: 'Data',
-        meta: { title: '字典数据', activeMenu: '/student/group' }
+        meta: { title: '小组详情', activeMenu: '/student/group' }
       }
     ]
   },

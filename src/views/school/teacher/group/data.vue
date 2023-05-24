@@ -1,31 +1,22 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
-      <el-form-item label="岗位编码" prop="postCode">
+      <el-form-item label="学号" prop="userId">
         <el-input
-          v-model="queryParams.postCode"
+          v-model="queryParams.userId"
           clearable
-          placeholder="请输入岗位编码"
+          placeholder="请输入学号"
+          type="number"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="岗位名称" prop="postName">
+      <el-form-item label="姓名" prop="userName">
         <el-input
-          v-model="queryParams.postName"
-          placeholder="请输入岗位名称"
+          v-model="queryParams.userName"
+          placeholder="请输入姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" clearable placeholder="岗位状态">
-          <el-option
-            v-for="dict in dict.type.sys_normal_disable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
@@ -86,7 +77,7 @@
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
       <el-table-column align="center" label="学号" prop="userId"/>
-      <el-table-column align="center" label="姓名" prop="userName"/>
+      <el-table-column align="center" label="姓名" prop="nickName"/>
       <el-table-column align="center" label="所在小组" prop="groupName"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
@@ -153,7 +144,7 @@
 </template>
 
 <script>
-import { addPost, delPost, getData, updatePost } from '@/api/complex/student/group/data'
+import { addPost, delUser, getData, searchData, updatePost } from '@/api/complex/student/group/data'
 
 export default {
   name: 'Post',
@@ -181,10 +172,10 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
+        groupId: 0,
         pageSize: 10,
-        postCode: undefined,
-        postName: undefined,
-        status: undefined
+        userName: undefined,
+        userId: undefined
       },
       // 表单参数
       form: {},
@@ -224,19 +215,21 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        postId: undefined,
-        postCode: undefined,
-        postName: undefined,
-        postSort: 0,
-        status: '0',
-        remark: undefined
+        userName: undefined,
+        userId: undefined
       }
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      this.loading = true
       this.queryParams.pageNum = 1
-      this.getList()
+      this.queryParams.groupId = this.$route.params && this.$route.params.groupId
+      searchData(this.queryParams).then(res => {
+        this.groupList = res.rows
+        this.total = res.total
+        this.loading = false
+      })
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -246,7 +239,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.postId)
-      this.single = selection.length != 1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -287,11 +280,12 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const postIds = row.postId || this.ids
-      this.$modal.confirm('是否确认删除岗位编号为"' + postIds + '"的数据项？').then(function() {
-        return delPost(postIds)
+      const username = row.userId || this.ids
+      const groupName = row.groupId || this.ids
+      this.$modal.confirm('是否要将学号为"' + username + '"移除' + groupName + '?').then(function() {
+        return delUser(username)
       }).then(() => {
-        this.getList()
+        this.handleQuery()
         this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })

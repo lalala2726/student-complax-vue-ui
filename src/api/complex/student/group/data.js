@@ -17,6 +17,14 @@ export function getData(groupId) {
   })
 }
 
+export function searchData(query) {
+  return request(({
+    url: '/school/complex/student/data/list',
+    method: 'get',
+    params: query
+  }))
+}
+
 // 新增岗位
 export function addPost(data) {
   return request({
@@ -36,9 +44,9 @@ export function updatePost(data) {
 }
 
 // 删除岗位
-export function delPost(postId) {
+export function delUser(postId) {
   return request({
-    url: '/system/post/' + postId,
+    url: '/school/complex/student/data/' + postId,
     method: 'delete'
   })
 }
