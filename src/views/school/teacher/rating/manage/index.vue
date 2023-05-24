@@ -83,7 +83,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="ratringList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="ratingList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
       <el-table-column align="center" label="学号" prop="studentId"/>
       <el-table-column align="center" label="姓名" prop="studentName"/>
@@ -176,60 +176,62 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="学生姓名" prop="studentName">
-              <el-input v-model="form.nickName" maxlength="30" placeholder="请输入姓名"/>
+              <el-input v-model="form.studentName" :disabled="true" maxlength="30" placeholder="请输入姓名"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="学生学号" prop="studentId">
-              <el-input v-model="form.phonenumber" maxlength="11" placeholder="请输入学号"/>
+              <el-input v-model="form.studentId" :disabled="true" maxlength="11" placeholder="请输入学号"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="自我学习" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="自我学习" prop="self">
+              <el-input-number v-model="form.self" :max="2" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="信息处理" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="沟通交流" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="团队合作" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="信息处理" prop="information">
+              <el-input-number v-model="form.information" :max="2" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="解决问题" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="沟通交流" prop="communicate">
+              <el-input-number v-model="form.communicate" :max="2" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="革新创新" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="团队合作" prop="team">
+              <el-input-number v-model="form.team" :max="2" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="团队合作" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="解决问题" prop="solve">
+              <el-input-number v-model="form.solve" :max="2" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="上次总分" prop="orderNum">
-              <el-input-number v-model="form.orderNum" :min="0" controls-position="right"/>
+            <el-form-item label="革新创新" prop="innovation">
+              <el-input-number v-model="form.innovation" :max="2" :min="0" controls-position="right"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="本次总分" prop="innovation">
+              <el-input-number v-model="form.thisResult" :disabled="true" :max:="10" :min="0"
+                               controls-position="right"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="上次总分" prop="lastTimeResult">
+              <el-input-number v-model="form.lastTimeResult" :max="10" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -253,7 +255,7 @@
 </template>
 
 <script>
-import { addPost, delPost, getRating, listRating, updatePost } from '@/api/complex/manage/rating'
+import { addPost, delPost, getRating, listRating, updateRating } from '@/api/complex/manage/rating'
 import Treeselect from '@riophae/vue-treeselect'
 
 export default {
@@ -275,7 +277,7 @@ export default {
       // 总条数
       total: 0,
       // 岗位表格数据
-      ratringList: [],
+      ratingList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -292,14 +294,8 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        postName: [
+        studentName: [
           { required: true, message: '岗位名称不能为空', trigger: 'blur' }
-        ],
-        postCode: [
-          { required: true, message: '岗位编码不能为空', trigger: 'blur' }
-        ],
-        postSort: [
-          { required: true, message: '岗位顺序不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -312,7 +308,7 @@ export default {
     getList() {
       this.loading = true
       listRating(this.queryParams).then(response => {
-        this.ratringList = response.rows
+        this.ratingList = response.rows
         this.total = response.total
         this.loading = false
       })
@@ -325,12 +321,9 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        postId: undefined,
-        postCode: undefined,
-        postName: undefined,
-        postSort: 0,
-        status: '0',
-        remark: undefined
+        studentName: undefined,
+        studentId: undefined,
+        status: '0'
       }
       this.resetForm('form')
     },
@@ -359,19 +352,19 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const postId = row.postId || this.ids
-      getRating(postId).then(response => {
+      const studentId = row.studentId || this.ids
+      getRating(studentId).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改岗位'
+        this.title = '修改成绩'
       })
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.postId != undefined) {
-            updatePost(this.form).then(response => {
+          if (this.form.studentId !== undefined) {
+            updateRating(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()

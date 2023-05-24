@@ -27,9 +27,9 @@ export function addPost(data) {
 }
 
 // 修改岗位
-export function updatePost(data) {
+export function updateRating(data) {
   return request({
-    url: '/system/post',
+    url: '/school/complex/student/ratings',
     method: 'put',
     data: data
   })
