@@ -18,9 +18,9 @@ export function getRating(Rating) {
 }
 
 // 新增岗位
-export function addPost(data) {
+export function addRating(data) {
   return request({
-    url: '/system/post',
+    url: '/school/complex/student/ratings',
     method: 'post',
     data: data
   })

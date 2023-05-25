@@ -53,7 +53,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:post:edit']"
+          v-hasPermi="['student:rating:edit']"
         >修改
         </el-button>
       </el-col>
@@ -84,7 +84,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="ratingList" @selection-change="handleSelectionChange">
-      <el-table-column align="center" type="selection" width="55"/>
+      <el-table-column align="center" type="selection" width="50"/>
       <el-table-column align="center" label="学号" prop="studentId"/>
       <el-table-column align="center" label="姓名" prop="studentName"/>
       <el-table-column align="center" label="所在小组" prop="groupName" width="180">
@@ -172,16 +172,20 @@
 
     <!-- 添加或修改岗位对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="600px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="学生姓名" prop="studentName">
-              <el-input v-model="form.studentName" :disabled="true" maxlength="30" placeholder="请输入姓名"/>
+              <el-input v-model="form.studentName" :disabled="this.studentIsFlag" maxlength="30"
+                        placeholder="请输入姓名"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="学生学号" prop="studentId">
-              <el-input v-model="form.studentId" :disabled="true" maxlength="11" placeholder="请输入学号"/>
+              <el-input-number v-model="form.studentId" :disabled="this.studentIsFlag"
+                               controls-position="right"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -255,7 +259,7 @@
 </template>
 
 <script>
-import { addPost, delPost, getRating, listRating, updateRating } from '@/api/complex/manage/rating'
+import { addRating, delPost, getRating, listRating, updateRating } from '@/api/complex/manage/rating'
 import Treeselect from '@riophae/vue-treeselect'
 
 export default {
@@ -272,6 +276,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      //是否可以修改学生信息信息
+      studentIsFlag: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -295,7 +301,10 @@ export default {
       // 表单校验
       rules: {
         studentName: [
-          { required: true, message: '岗位名称不能为空', trigger: 'blur' }
+          { required: true, message: '学生姓名不能为空!', trigger: 'blur' }
+        ],
+        studentId: [
+          { required: true, message: '学号不能为空!', trigger: 'blur' }
         ]
       }
     }
@@ -322,7 +331,16 @@ export default {
     reset() {
       this.form = {
         studentName: undefined,
-        studentId: undefined,
+        studentId: 0,
+        ratingsId: undefined,
+        self: 0,
+        information: 0,
+        communicate: 0,
+        team: 0,
+        solve: 0,
+        lastTimeResult: 0,
+        innovation: 0,
+        thisResult: 0,
         status: '0'
       }
       this.resetForm('form')
@@ -339,21 +357,24 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
-      this.single = selection.length != 1
+      this.ids = selection.map(item => item.studentId)
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
+      console.log('表达已重置')
       this.reset()
+      this.studentIsFlag = false
       this.open = true
-      this.title = '添加岗位'
+      this.title = '新增学生成绩'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
       const studentId = row.studentId || this.ids
       getRating(studentId).then(response => {
+        console.log('修改按钮已执行！')
         this.form = response.data
         this.open = true
         this.title = '修改成绩'
@@ -363,14 +384,16 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.studentId !== undefined) {
+          console.log('参数为:' + this.form.ratingsId)
+          if (this.form.ratingsId !== undefined) {
             updateRating(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()
             })
           } else {
-            addPost(this.form).then(response => {
+            console.log('执行了新增方法')
+            addRating(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
@@ -381,9 +404,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const postIds = row.postId || this.ids
-      this.$modal.confirm('是否确认删除岗位编号为"' + postIds + '"的数据项？').then(function() {
-        return delPost(postIds)
+      const studentId = row.studentId || this.ids
+      this.$modal.confirm('是否删除学号为"' + studentId + '"的数据项？').then(function() {
+        return delPost(studentId)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')

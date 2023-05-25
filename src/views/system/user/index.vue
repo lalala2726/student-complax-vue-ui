@@ -137,12 +137,20 @@
         </el-row>
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
-          <el-table-column label="学号" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="姓名" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
+          <el-table-column align="center" type="selection" width="50"/>
+          <el-table-column v-if="columns[0].visible" key="userId" align="center" label="用户编号" prop="userId"/>
+          <el-table-column v-if="columns[1].visible" key="userName" :show-overflow-tooltip="true" align="center" label="用户名称"
+                           prop="userName"
+          />
+          <el-table-column v-if="columns[2].visible" key="nickName" :show-overflow-tooltip="true" align="center" label="用户昵称"
+                           prop="nickName"
+          />
+          <el-table-column v-if="columns[3].visible" key="deptName" :show-overflow-tooltip="true" align="center" label="部门"
+                           prop="dept.deptName"
+          />
+          <el-table-column v-if="columns[4].visible" key="phonenumber" align="center" label="手机号码"
+                           prop="phonenumber" width="120"
+          />
           <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
               <el-switch
@@ -183,9 +191,13 @@
                 <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
-                    v-hasPermi="['system:user:resetPwd']">重置密码</el-dropdown-item>
+                                    v-hasPermi="['system:user:resetPwd']"
+                  >重置密码
+                  </el-dropdown-item>
                   <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                    v-hasPermi="['system:user:edit']">分配角色</el-dropdown-item>
+                                    v-hasPermi="['system:user:edit']"
+                  >分配角色
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -207,13 +219,13 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入姓名" maxlength="30" />
+            <el-form-item label="用户昵称" prop="nickName">
+              <el-input v-model="form.nickName" maxlength="30" placeholder="请输入用户昵称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="所属班级" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请输入所属班级" />
+            <el-form-item label="归属部门" prop="deptId">
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -231,8 +243,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="学号" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入学号" maxlength="30" />
+            <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
+              <el-input v-model="form.userName" maxlength="30" placeholder="请输入用户名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -341,10 +353,19 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus, deptTreeSelect } from "@/api/system/user";
-import { getToken } from "@/utils/auth";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {
+  addUser,
+  changeUserStatus,
+  delUser,
+  deptTreeSelect,
+  getUser,
+  listUser,
+  resetUserPwd,
+  updateUser
+} from '@/api/system/user'
+import { getToken } from '@/utils/auth'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
   name: "User",
@@ -425,11 +446,11 @@ export default {
       // 表单校验
       rules: {
         userName: [
-          { required: true, message: "学号不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '学号 2 和 20 之间', trigger: 'blur' }
+          { required: true, message: '用户名称不能为空', trigger: 'blur' },
+          { min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' }
         ],
         nickName: [
-          { required: true, message: "请输入姓名", trigger: "blur" }
+          { required: true, message: '用户昵称不能为空', trigger: 'blur' }
         ],
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" },
@@ -586,17 +607,18 @@ export default {
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
-      this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$prompt('请输入"' + row.userName + '"的新密码', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         closeOnClickModal: false,
         inputPattern: /^.{5,20}$/,
-        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
+        inputErrorMessage: '用户密码长度必须介于 5 和 20 之间'
       }).then(({ value }) => {
-          resetUserPwd(row.userId, value).then(response => {
-            this.$modal.msgSuccess("修改成功，新密码是：" + value);
-          });
-        }).catch(() => {});
+        resetUserPwd(row.userId, value).then(response => {
+          this.$modal.msgSuccess('修改成功，新密码是：' + value)
+        })
+      }).catch(() => {
+      })
     },
     /** 分配角色操作 */
     handleAuthRole: function(row) {
