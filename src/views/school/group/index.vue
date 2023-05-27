@@ -1,87 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
-      <el-form-item label="学生姓名" prop="postCode">
-        <el-input
-          v-model="queryParams.postCode"
-          clearable
-          placeholder="请输入姓名"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="小组" prop="postName">
-        <el-input
-          v-model="queryParams.postName"
-          clearable
-          placeholder="请输入小组名称"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提交状态" prop="status">
-        <el-select v-model="queryParams.status" clearable placeholder="提交状态">
-          <el-option
-            v-for="dict in dict.type.student_info_submit"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:add']"
-          icon="el-icon-plus"
-          plain
-          size="mini"
-          type="primary"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['student:rating:edit']"
-          :disabled="single"
-          icon="el-icon-edit"
-          plain
-          size="mini"
-          type="success"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:remove']"
-          :disabled="multiple"
-          icon="el-icon-delete"
-          plain
-          size="mini"
-          type="danger"
-          @click="handleDelete"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:export']"
-          icon="el-icon-download"
-          plain
-          size="mini"
-          type="warning"
-          @click="handleExport"
-        >导出
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
 
     <el-table v-loading="loading" :data="ratingList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50"/>
@@ -98,9 +17,17 @@
       <el-table-column align="center" label="团队合作" prop="team"/>
       <el-table-column align="center" label="解决问题" prop="solve"/>
       <el-table-column align="center" label="革新创新" prop="innovation"/>
-      <el-table-column align="center" label="上次总分" prop="lastTimeResult"/>
+      <el-table-column align="center" label="上次总分" prop="lastTimeResult" width="180">
+        <template slot-scope="scope">
+          <span>{{ scope.row.lastTimeResult ? scope.row.lastTimeResult : '0' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="本次总分" prop="thisResult"/>
-      <el-table-column align="center" label="差值" prop="difference"/>
+      <el-table-column align="center" label="差值" prop="difference" width="180">
+        <template slot-scope="scope">
+          <span>{{ scope.row.difference ? scope.row.difference : '暂无' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="提交状态" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.student_info_submit" :value="scope.row.status"/>
@@ -114,7 +41,6 @@
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
-            v-hasPermi="['system:post:edit']"
             icon="el-icon-edit"
             size="mini"
             type="text"
@@ -233,11 +159,6 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="上次总分" prop="lastTimeResult">
-              <el-input-number v-model="form.lastTimeResult" :max="10" :min="0" controls-position="right"/>
-            </el-form-item>
-          </el-col>
         </el-row>
         <el-form-item label="提交状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -259,7 +180,7 @@
 </template>
 
 <script>
-import { addRating, delPost, getRating, listRating, updateRating } from '@/api/complex/manage/rating'
+import { addRating, deleteRating, getRating, listRating, updateRating } from '@/api/complex/student/mygroup/rating'
 import Treeselect from '@riophae/vue-treeselect'
 
 export default {
@@ -406,7 +327,7 @@ export default {
     handleDelete(row) {
       const studentId = row.studentId || this.ids
       this.$modal.confirm('是否删除学号为"' + studentId + '"的数据项？').then(function() {
-        return delPost(studentId)
+        return deleteRating(studentId)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')

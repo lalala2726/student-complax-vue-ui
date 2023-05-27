@@ -76,7 +76,7 @@
 
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column align="center" label="学号" prop="userId"/>
+      <el-table-column align="center" label="学号" prop="username"/>
       <el-table-column align="center" label="姓名" prop="nickName"/>
       <el-table-column align="center" label="所在小组" prop="groupName"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">

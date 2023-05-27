@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询岗位列表
 export function listRating(query) {
   return request({
-    url: '/school/complex/student/ratings/list',
+    url: '/complex/student/manage/group/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listRating(query) {
 // 查询岗位详细
 export function getRating(Rating) {
   return request({
-    url: '/school/complex/student/ratings/' + Rating,
+    url: '/complex/student/manage/group/' + Rating,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getRating(Rating) {
 // 新增岗位
 export function addRating(data) {
   return request({
-    url: '/school/complex/student/ratings',
+    url: '/complex/student/manage/group/',
     method: 'post',
     data: data
   })
@@ -29,16 +29,16 @@ export function addRating(data) {
 // 修改岗位
 export function updateRating(data) {
   return request({
-    url: '/school/complex/student/ratings',
+    url: '/complex/student/manage/group/',
     method: 'put',
     data: data
   })
 }
 
 // 删除岗位
-export function delPost(studentId) {
+export function deleteRating(studentId) {
   return request({
-    url: '/school/complex/student/ratings/' + studentId,
+    url: '/complex/student/manage/group/' + studentId,
     method: 'delete'
   })
 }
