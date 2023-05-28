@@ -128,6 +128,13 @@
           <span>{{ scope.row.submitTime ? scope.row.submitTime : '未提交' }}</span>
         </template>
       </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" align="center" label="数据可视化">
+        <template slot-scope="scope">
+          <router-link :to="'/student/display/index/' + scope.row.groupId" class="link-type">
+            <span>{{ '查看' + scope.row.groupName + '的数据 ' }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -313,7 +320,7 @@ export default {
             })
           } else {
             addType(this.form).then(response => {
-              this.$modal.msgSuccess('新增成功')
+
               this.open = false
               this.getList()
             })

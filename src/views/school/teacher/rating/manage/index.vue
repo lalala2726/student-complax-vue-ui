@@ -235,7 +235,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="上次总分" prop="lastTimeResult">
-              <el-input-number v-model="form.lastTimeResult" :max="10" :min="0" controls-position="right"/>
+              <el-input-number v-model="form.lastTimeResult" :max="12" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>

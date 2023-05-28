@@ -133,6 +133,7 @@ export const dynamicRoutes = [
       }
     ]
   },
+  /* 查看小组详情 */
   {
     path: '/student/dict-data',
     component: Layout,
@@ -144,6 +145,21 @@ export const dynamicRoutes = [
         component: () => import('@/views/school/teacher/group/data.vue'),
         name: 'Data',
         meta: { title: '小组详情', activeMenu: '/student/group' }
+      }
+    ]
+  },
+  /* 小组数据可视化 */
+  {
+    path: '/student/display',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:dict:list'],
+    children: [
+      {
+        path: 'index/:groupId(\\d+)',
+        component: () => import('@/views/school/teacher/group/display.vue'),
+        name: 'Display',
+        meta: { title: '数据可视化', activeMenu: '/student/display' }
       }
     ]
   },
