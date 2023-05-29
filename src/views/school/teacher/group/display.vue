@@ -25,7 +25,8 @@ export default {
 
   methods: {
     getGroupDataInfo() {
-      getGroupData(1).then(res => {
+      const groupId = this.$route.params && this.$route.params.groupId
+      getGroupData(groupId).then(res => {
         this.name = res.data.name
         this.lastFraction = res.data.lastFraction
         this.thisFraction = res.data.thisFraction

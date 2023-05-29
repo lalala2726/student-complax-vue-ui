@@ -1,21 +1,33 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="学生姓名" prop="postCode">
+      <el-form-item label="学生姓名" prop="studentName">
         <el-input
-          v-model="queryParams.postCode"
+          v-model="queryParams.studentName"
           placeholder="请输入姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="小组" prop="postName">
-        <el-input
-          v-model="queryParams.postName"
-          placeholder="请输入小组名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="小组" prop="groupId">
+        <el-select v-model="queryParams.groupId" clearable placeholder="选择小组">
+          <el-option
+            v-for="dict in dict.type.student_group_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="职位" prop="studentType">
+        <el-select v-model="queryParams.studentType" clearable placeholder="选择职位">
+          <el-option
+            v-for="dict in dict.type.student_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="提交状态" prop="status">
         <el-select v-model="queryParams.status" clearable placeholder="提交状态">
@@ -87,9 +99,9 @@
       <el-table-column align="center" type="selection" width="50"/>
       <el-table-column align="center" label="学号" prop="studentId"/>
       <el-table-column align="center" label="姓名" prop="studentName"/>
-      <el-table-column align="center" label="所在小组" prop="groupName" width="180">
+      <el-table-column align="center" label="所在小组" prop="groupId">
         <template slot-scope="scope">
-          <span>{{ scope.row.groupName ? scope.row.groupName : '未分配小组' }}</span>
+          <dict-tag :options="dict.type.student_group_name" :value="scope.row.groupId"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="自我学习" prop="self"/>
@@ -265,7 +277,7 @@ import Treeselect from '@riophae/vue-treeselect'
 export default {
   name: 'Post',
   components: { Treeselect },
-  dicts: ['student_info_submit'],
+  dicts: ['student_info_submit', 'student_group_name', 'student_type'],
   data() {
     return {
       // 遮罩层
@@ -294,7 +306,9 @@ export default {
         pageSize: 10,
         studentName: undefined,
         groupName: undefined,
-        status: undefined
+        status: undefined,
+        groupId: undefined,
+        studentType: undefined
       },
       // 表单参数
       form: {},
@@ -341,7 +355,8 @@ export default {
         lastTimeResult: 0,
         innovation: 0,
         thisResult: 0,
-        status: '0'
+        status: '0',
+        studentType: undefined
       }
       this.resetForm('form')
     },

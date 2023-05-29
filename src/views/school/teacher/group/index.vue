@@ -1,15 +1,6 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
-      <el-form-item label="小组名称" prop="dictName">
-        <el-input
-          v-model="queryParams.dictName"
-          clearable
-          placeholder="请输入小组名称"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
@@ -24,17 +15,6 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          end-placeholder="结束日期"
-          range-separator="-"
-          start-placeholder="开始日期"
-          style="width: 240px"
-          type="daterange"
-          value-format="yyyy-MM-dd"
-        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
@@ -118,14 +98,9 @@
           <dict-tag :options="dict.type.student_info_submit" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" align="center" label="备注" prop="remark">
+      <el-table-column align="center" label="小组组长" prop="teamLeader" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.remark ? scope.row.remark : '暂无' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="提交时间" prop="submitTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.submitTime ? scope.row.submitTime : '未提交' }}</span>
+          <span>{{ scope.row.teamLeader ? scope.row.teamLeader : '未提交' }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" align="center" label="数据可视化">
