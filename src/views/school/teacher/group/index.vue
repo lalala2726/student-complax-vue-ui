@@ -21,67 +21,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:dict:add']"
-          icon="el-icon-plus"
-          plain
-          size="mini"
-          type="primary"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:dict:edit']"
-          :disabled="single"
-          icon="el-icon-edit"
-          plain
-          size="mini"
-          type="success"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:dict:remove']"
-          :disabled="multiple"
-          icon="el-icon-delete"
-          plain
-          size="mini"
-          type="danger"
-          @click="handleDelete"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:dict:export']"
-          icon="el-icon-download"
-          plain
-          size="mini"
-          type="warning"
-          @click="handleExport"
-        >导出
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:dict:remove']"
-          icon="el-icon-refresh"
-          plain
-          size="mini"
-          type="danger"
-          @click="handleRefreshCache"
-        >刷新缓存
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    
 
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
@@ -96,11 +36,6 @@
       <el-table-column align="center" label="提交状态" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.student_info_submit" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="小组组长" prop="teamLeader" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.teamLeader ? scope.row.teamLeader : '未提交' }}</span>
         </template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" align="center" label="数据可视化">

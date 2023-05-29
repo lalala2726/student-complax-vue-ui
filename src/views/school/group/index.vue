@@ -45,16 +45,9 @@
             size="mini"
             type="text"
             @click="handleUpdate(scope.row)"
-          >修改
+          >提交成绩
           </el-button>
-          <el-button
-            v-hasPermi="['system:post:remove']"
-            icon="el-icon-delete"
-            size="mini"
-            type="text"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -298,7 +291,7 @@ export default {
         console.log('修改按钮已执行！')
         this.form = response.data
         this.open = true
-        this.title = '修改成绩'
+        this.title = '提交成绩'
       })
     },
     /** 提交按钮 */
