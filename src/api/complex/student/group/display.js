@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询岗位列表
+// 显示指定小组数据
 export function getGroupData(groupID) {
   return request({
     url: '/school/complex/student/display/' + groupID,
@@ -8,10 +8,10 @@ export function getGroupData(groupID) {
   })
 }
 
-// 查询小组列表
-export function getData(groupId) {
+// 全部展示成绩分析数据
+export function displayDashboardData() {
   return request({
-    url: '/complex/student/group/' + groupId,
+    url: '/school/complex/student/display/all',
     method: 'get'
   })
 }

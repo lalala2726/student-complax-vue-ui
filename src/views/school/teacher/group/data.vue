@@ -1,104 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px" size="small">
-      <el-form-item label="学号" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          clearable
-          placeholder="请输入学号"
-          type="number"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="姓名" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:add']"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          type="primary"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:edit']"
-          :disabled="single"
-          icon="el-icon-edit"
-          size="mini"
-          plain
-          @click="handleUpdate"
-          type="success"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:remove']"
-          :disabled="multiple"
-          icon="el-icon-delete"
-          size="mini"
-          plain
-          @click="handleDelete"
-          type="danger"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:post:export']"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          type="warning"
-        >导出
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
 
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
       <el-table-column align="center" label="学号" prop="username"/>
       <el-table-column align="center" label="姓名" prop="nickName"/>
       <el-table-column align="center" label="所在小组" prop="groupName"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            v-hasPermi="['system:post:edit']"
-            @click="handleUpdate(scope.row)"
-            icon="el-icon-edit"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            v-hasPermi="['system:post:remove']"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination

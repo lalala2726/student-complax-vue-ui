@@ -16,7 +16,7 @@ export default {
       this.initListener()
     }
 
-    // when keep-alive chart activated, auto resize
+    // when keep-alive components activated, auto resize
     this.resize()
   },
   beforeDestroy() {
