@@ -32,10 +32,10 @@
         <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="68px"
                  size="small"
         >
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="学号" prop="userName">
             <el-input
               v-model="queryParams.userName"
-              placeholder="请输入用户名称"
+              placeholder="请输入学生学号"
               clearable
               style="width: 240px"
               @keyup.enter.native="handleQuery"
@@ -90,7 +90,6 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
             >新增
             </el-button>
           </el-col>
@@ -102,7 +101,6 @@
               size="mini"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
             >修改
             </el-button>
           </el-col>
@@ -114,7 +112,6 @@
               size="mini"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['system:user:remove']"
             >删除
             </el-button>
           </el-col>
@@ -125,7 +122,6 @@
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
-              v-hasPermi="['system:user:import']"
             >导入
             </el-button>
           </el-col>
@@ -136,7 +132,6 @@
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
-              v-hasPermi="['system:user:export']"
             >导出
             </el-button>
           </el-col>
@@ -188,7 +183,6 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
               >修改
               </el-button>
               <el-button
@@ -196,20 +190,17 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
               >删除
               </el-button>
-              <el-dropdown v-hasPermi="['system:user:resetPwd', 'system:user:edit']" size="mini"
+              <el-dropdown size="mini"
                            @command="(command) => handleCommand(command, scope.row)"
               >
                 <el-button size="mini" type="text" icon="el-icon-d-arrow-right">更多</el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
-                                    v-hasPermi="['system:user:resetPwd']"
                   >重置密码
                   </el-dropdown-item>
                   <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                                    v-hasPermi="['system:user:edit']"
                   >分配角色
                   </el-dropdown-item>
                 </el-dropdown-menu>

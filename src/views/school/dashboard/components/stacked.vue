@@ -61,19 +61,16 @@ export default {
           {
             name: '本次总分',
             type: 'line',
-            stack: 'Total',
             data: totalThisResult
           },
           {
             name: '上次总分',
             type: 'line',
-            stack: 'Total',
             data: totalLastTimeResult
           },
           {
             name: '本次差值',
             type: 'line',
-            stack: 'Total',
             data: totalAbs
           }
         ]

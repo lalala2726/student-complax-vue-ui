@@ -21,7 +21,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    
+
 
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
@@ -45,26 +45,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
-        <template slot-scope="scope">
-          <el-button
-            v-hasPermi="['system:dict:edit']"
-            icon="el-icon-edit"
-            size="mini"
-            type="text"
-            @click="handleUpdate(scope.row)"
-          >修改
-          </el-button>
-          <el-button
-            v-hasPermi="['system:dict:remove']"
-            icon="el-icon-delete"
-            size="mini"
-            type="text"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
+
     </el-table>
 
     <pagination

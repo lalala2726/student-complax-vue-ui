@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询岗位列表
+// 查询成绩列表
 export function listRating(query) {
   return request({
     url: '/school/complex/student/ratings/list',
@@ -9,7 +9,7 @@ export function listRating(query) {
   })
 }
 
-// 查询岗位详细
+// 根据ID查询成绩详细信息
 export function getRating(Rating) {
   return request({
     url: '/school/complex/student/ratings/' + Rating,
@@ -17,7 +17,7 @@ export function getRating(Rating) {
   })
 }
 
-// 新增岗位
+// 新增成绩信息
 export function addRating(data) {
   return request({
     url: '/school/complex/student/ratings',
@@ -35,10 +35,18 @@ export function updateRating(data) {
   })
 }
 
-// 删除岗位
+// 删除成绩信息
 export function delPost(studentId) {
   return request({
     url: '/school/complex/student/ratings/' + studentId,
     method: 'delete'
+  })
+}
+
+//状态修改
+export function submitChange(status) {
+  return request({
+    url: '/school/complex/student/ratings/submitChange/' + status,
+    method: 'post'
   })
 }

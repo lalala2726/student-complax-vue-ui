@@ -123,7 +123,7 @@ export const dynamicRoutes = [
     path: '/system/dict-data',
     component: Layout,
     hidden: true,
-    permissions: ['system:dict:list'],
+    permissions: ['complex:group:query'],
     children: [
       {
         path: 'index/:dictId(\\d+)',
@@ -138,7 +138,7 @@ export const dynamicRoutes = [
     path: '/student/dict-data',
     component: Layout,
     hidden: true,
-    permissions: ['system:dict:list'],
+    permissions: ['complex:group:query'],
     children: [
       {
         path: 'index/:groupId(\\d+)',
@@ -153,7 +153,7 @@ export const dynamicRoutes = [
     path: '/student/display',
     component: Layout,
     hidden: true,
-    permissions: ['system:dict:list'],
+    permissions: ['complex:group:query'],
     children: [
       {
         path: 'index/:groupId(\\d+)',

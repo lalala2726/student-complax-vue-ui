@@ -53,7 +53,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:post:add']"
+          v-hasPermi="['complex:rating:add']"
         >新增
         </el-button>
       </el-col>
@@ -65,7 +65,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['student:rating:edit']"
+          v-hasPermi="['complex:rating:edit']"
         >修改
         </el-button>
       </el-col>
@@ -77,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:post:remove']"
+          v-hasPermi="['complex:rating:remove']"
         >删除
         </el-button>
       </el-col>
@@ -88,8 +88,26 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:post:export']"
+          v-hasPermi="['complex:rating:export']"
         >导出
+        </el-button>
+        <el-button
+          v-hasPermi="['complex:rating:edit']"
+          icon="el-icon-folder-checked"
+          plain
+          size="mini"
+          type="success"
+          @click="submitChange(1)"
+        >全部提交
+        </el-button>
+        <el-button
+          v-hasPermi="['complex:rating:edit']"
+          icon="el-icon-folder-delete"
+          plain
+          size="mini"
+          type="warning"
+          @click="submitChange(0)"
+        >全部未提交
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -130,7 +148,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:post:edit']"
+            v-hasPermi="['complex:rating:edit']"
           >修改
           </el-button>
           <el-button
@@ -138,7 +156,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:post:remove']"
+            v-hasPermi="['complex:rating:remove']"
           >删除
           </el-button>
         </template>
@@ -156,7 +174,7 @@
     <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
       <template slot-scope="scope">
         <el-button
-          v-hasPermi="['system:post:edit']"
+          v-hasPermi="['complex:rating:edit']"
           icon="el-icon-edit"
           size="mini"
           type="text"
@@ -164,7 +182,7 @@
         >修改
         </el-button>
         <el-button
-          v-hasPermi="['system:post:remove']"
+          v-hasPermi="['complex:rating:remove']"
           icon="el-icon-delete"
           size="mini"
           type="text"
@@ -271,7 +289,7 @@
 </template>
 
 <script>
-import { addRating, delPost, getRating, listRating, updateRating } from '@/api/complex/manage/rating'
+import { addRating, delPost, getRating, listRating, submitChange, updateRating } from '@/api/complex/manage/rating'
 import Treeselect from '@riophae/vue-treeselect'
 
 export default {
@@ -426,6 +444,12 @@ export default {
         this.getList()
         this.$modal.msgSuccess('删除成功')
       }).catch(() => {
+      })
+    },
+    //提交状态修改
+    submitChange(status) {
+      submitChange(status).then(res => {
+        this.getList()
       })
     },
     /** 导出按钮操作 */
