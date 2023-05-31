@@ -109,6 +109,15 @@
           @click="submitChange(0)"
         >全部未提交
         </el-button>
+        <el-button
+          v-hasPermi="['complex:rating:edit']"
+          icon="el-icon-folder-delete"
+          plain
+          size="mini"
+          type="danger"
+          @click="resetScoreEvent"
+        >重置所有分数
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -289,7 +298,15 @@
 </template>
 
 <script>
-import { addRating, delPost, getRating, listRating, submitChange, updateRating } from '@/api/complex/manage/rating'
+import {
+  addRating,
+  delPost,
+  getRating,
+  listRating,
+  resetScore,
+  submitChange,
+  updateRating
+} from '@/api/complex/manage/rating'
 import Treeselect from '@riophae/vue-treeselect'
 
 export default {
@@ -450,6 +467,17 @@ export default {
     submitChange(status) {
       submitChange(status).then(res => {
         this.getList()
+      })
+    },
+    //重置所有学生的分数
+    resetScoreEvent() {
+      this.$modal.confirm('是否重置所有学生的成绩？此操作执行后无法恢复,请确定你已备份！').then(function() {
+        return resetScore()
+      }).then(() => {
+        this.getList()
+        this.$modal.msgSuccess('重置成功！')
+      }).catch(() => {
+        this.$modal.msgError('重置失败！')
       })
     },
     /** 导出按钮操作 */

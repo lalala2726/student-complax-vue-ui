@@ -47,6 +47,14 @@ export function delPost(studentId) {
 export function submitChange(status) {
   return request({
     url: '/school/complex/student/ratings/submitChange/' + status,
-    method: 'post'
+    method: 'put'
+  })
+}
+
+//重置所有的分数
+export function resetScore() {
+  return request({
+    url: '/school/complex/student/ratings/resetScore',
+    method: 'put'
   })
 }
