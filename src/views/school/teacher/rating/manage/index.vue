@@ -139,6 +139,13 @@
       <el-table-column align="center" label="革新创新" prop="innovation"/>
       <el-table-column align="center" label="上次总分" prop="lastTimeResult"/>
       <el-table-column align="center" label="本次总分" prop="thisResult"/>
+      <el-table-column :show-overflow-tooltip="true" align="center" label="数据">
+        <template slot-scope="scope">
+          <router-link :to="'/student/display/index/' + scope.row.groupId" class="link-type">
+            <span>{{ '查看' + scope.row.studentName + '的数据 ' }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="差值" prop="difference"/>
       <el-table-column align="center" label="提交状态" prop="status">
         <template slot-scope="scope">
@@ -434,7 +441,6 @@ export default {
     submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          console.log('参数为:' + this.form.ratingsId)
           if (this.form.ratingsId !== undefined) {
             updateRating(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
