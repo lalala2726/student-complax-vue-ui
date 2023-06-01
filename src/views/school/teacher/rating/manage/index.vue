@@ -141,7 +141,7 @@
       <el-table-column align="center" label="本次总分" prop="thisResult"/>
       <el-table-column :show-overflow-tooltip="true" align="center" label="数据">
         <template slot-scope="scope">
-          <router-link :to="'/student/display/index/' + scope.row.groupId" class="link-type">
+          <router-link :to="'/student/info-data/index/' + scope.row.studentId" class="link-type">
             <span>{{ '查看' + scope.row.studentName + '的数据 ' }}</span>
           </router-link>
         </template>
@@ -277,11 +277,6 @@
               <el-input-number v-model="form.thisResult" :disabled="true" :max:="10" :min="0"
                                controls-position="right"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="上次总分" prop="lastTimeResult">
-              <el-input-number v-model="form.lastTimeResult" :max="12" :min="0" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>

@@ -157,9 +157,24 @@ export const dynamicRoutes = [
     children: [
       {
         path: 'index/:groupId(\\d+)',
-        component: () => import('@/views/school/teacher/group/display.vue'),
+        component: () => import('@/views/school/teacher/rating/last/display.vue'),
         name: 'Display',
         meta: { title: '数据可视化', activeMenu: '/student/display' }
+      }
+    ]
+  },
+  /* 学生信息可视化 */
+  {
+    path: '/student/info-data',
+    component: Layout,
+    hidden: true,
+    permissions: ['complex:group:query'],
+    children: [
+      {
+        path: 'index/:studentId(\\d+)',
+        component: () => import('@/views/school/teacher/rating/last/display.vue'),
+        name: 'Display',
+        meta: { title: '学生数据可视化', activeMenu: '/student/info-data' }
       }
     ]
   },
