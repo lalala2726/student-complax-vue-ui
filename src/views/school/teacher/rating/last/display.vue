@@ -1,8 +1,9 @@
 <template>
-  <div class="chart-container">
+  <div className="chart-container">
     <div id="chartContainer"></div>
   </div>
 </template>
+
 <script>
 import * as echarts from 'echarts'
 import { getStudentData } from '@/api/complex/student/group/display'
@@ -29,18 +30,16 @@ export default {
       })
     },
     initChart() {
-
       const option = {
         title: {
           text: this.studentName
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
+          trigger: 'axis'
         },
-        legend: {},
+        legend: {
+          data: ['上次分数', '本次分数']
+        },
         grid: {
           left: '3%',
           right: '4%',
@@ -48,54 +47,63 @@ export default {
           containLabel: true
         },
         xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01]
+          type: 'category',
+          boundaryGap: false,
+          data: ['自我学习能力', '信息处理能力', '沟通交流能力', '团队合作能力', '解决问题能力', '革新创新能力']
         },
         yAxis: {
-          type: 'category',
-          data: ['自我学习能力', '信息处理能力', '沟通交流能力', '团队合作能力', '解决问题能力', '革新创新能力']
+          type: 'value',
+          axisLabel: {
+            formatter: '{value} 分'
+          }
         },
         series: [
           {
             name: '上次分数',
-            type: 'bar',
-            data: this.lastScore
+            type: 'line',
+            data: this.lastScore,
+            symbol: 'circle',
+            smooth: true,
+            label: {
+              show: true,
+              position: 'top',
+              formatter: '{c} 分'
+            }
           },
           {
             name: '本次分数',
-            type: 'bar',
-            data: this.thisScore
+            type: 'line',
+            data: this.thisScore,
+            symbol: 'circle',
+            smooth: true,
+            label: {
+              show: true,
+              position: 'top',
+              formatter: '{c} 分'
+            }
           }
         ]
       }
 
       this.$nextTick(() => {
-        // 初始化图表
         const chartContainer = document.getElementById('chartContainer')
         const myChart = echarts.init(chartContainer)
         myChart.setOption(option)
+
+        // 将图表容器居中
+        const chartWrapper = document.querySelector('.chart-container')
+        chartWrapper.style.display = 'flex'
+        chartWrapper.style.justifyContent = 'center'
+        chartWrapper.style.alignItems = 'center'
       })
     }
   }
 }
 </script>
 
-<style>
-#chartContainer {
-  width: 600px;
-  height: 400px;
-}
-
-.chart-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-}
 
 #chartContainer {
-  width: 1000px;
-  height: 500px;
+width: 100%;
+height: 100vh;
 }
 </style>
