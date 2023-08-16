@@ -165,16 +165,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['complex:rating:edit']"
-          >修改
+          >评分
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['complex:rating:remove']"
-          >删除
-          </el-button>
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            icon="el-icon-delete"-->
+          <!--            @click="handleDelete(scope.row)"-->
+          <!--            v-hasPermi="['complex:rating:remove']"-->
+          <!--          >删除-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -429,7 +429,7 @@ export default {
         console.log('修改按钮已执行！')
         this.form = response.data
         this.open = true
-        this.title = '修改成绩'
+        this.title = '成绩评分'
       })
     },
     /** 提交按钮 */

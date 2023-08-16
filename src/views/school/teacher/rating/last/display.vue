@@ -6,7 +6,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getStudentData } from '@/api/complex/student/group/display'
+import {getStudentData} from '@/api/complex/student/group/display'
 
 export default {
   data() {
@@ -86,24 +86,27 @@ export default {
       }
 
       this.$nextTick(() => {
+        // 初始化图表
         const chartContainer = document.getElementById('chartContainer')
         const myChart = echarts.init(chartContainer)
         myChart.setOption(option)
-
-        // 将图表容器居中
-        const chartWrapper = document.querySelector('.chart-container')
-        chartWrapper.style.display = 'flex'
-        chartWrapper.style.justifyContent = 'center'
-        chartWrapper.style.alignItems = 'center'
       })
     }
   }
 }
 </script>
 
-
+<style>
 #chartContainer {
-width: 100%;
-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 }
+
+.chart-container {
+
+}
+
 </style>

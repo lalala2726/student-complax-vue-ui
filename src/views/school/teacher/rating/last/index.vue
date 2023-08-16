@@ -25,16 +25,16 @@
             size="mini"
             type="text"
             @click="handleUpdate(scope.row)"
-          >修改
+          >评分
           </el-button>
-          <el-button
-            v-hasPermi="['complex:rating:remove']"
-            icon="el-icon-delete"
-            size="mini"
-            type="text"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
+          <!--          <el-button-->
+          <!--            v-hasPermi="['complex:rating:remove']"-->
+          <!--            icon="el-icon-delete"-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            @click="handleDelete(scope.row)"-->
+          <!--          >删除-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { getRating, listRating, updateRating } from '@/api/complex/manage/lastRating'
+import {getRating, listRating, updateRating} from '@/api/complex/manage/lastRating'
 
 export default {
   name: 'Post',
@@ -230,7 +230,7 @@ export default {
       getRating(studentId).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改成绩'
+        this.title = '成绩评分'
       })
     },
     /** 提交按钮 */
